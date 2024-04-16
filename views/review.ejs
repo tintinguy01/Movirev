@@ -1,0 +1,52 @@
+<%- include('partials/navbar.ejs') %>
+
+<body>
+
+    <div class="review-background">
+        <!-- Header -->
+        <div class="review-header">
+            <h1><%= movie.original_title %></h1>
+        </div>
+
+        <!-- Cover Image -->
+        <div class="cover-image">
+            <img class="review-bg" src="https://image.tmdb.org/t/p/w500/<%= movie.poster_path %>">
+            <!-- Add button -->
+            <a href="/review/<%= movie.id %>/<%= movie.original_title %>/new" class="add-button"><i class='bx bx-plus'></i> Add review</a>
+        </div>
+    </div>
+
+    <!-- Content Box -->
+    <div class="box">
+    
+        <div class="review-container">
+            <% for( let singleReview of review ) { %>
+                <div class="review-card">
+                    <div class="name-score">
+                        <h2 id="<%= singleReview.id %>"><%= singleReview.name %></h2>
+                        <input type="hidden" name="updatedItemId" value="<%= singleReview.id %>">
+                        <p id="<%= singleReview.id %>"><%= singleReview.score %> <i class='bx bxs-star'></i></p>
+                    </div>
+                    
+                    <h4 class="review-content" id="<%= singleReview.id %>"><%= singleReview.content %></h4>
+        
+                    <div class="review-button">
+                        <form action="/review/<%= movie.id %>/<%= movie.original_title %>/edit" method="post">
+                            <input type="hidden" name="editReviewId" value="<%= singleReview.id %>">
+                            <button type="submit"><i class='bx bxs-pencil' ></i></button>
+                        </form>
+        
+                        <form action="/review/<%= movie.id %>/<%= movie.original_title %>/delete" method="post">
+                            <input type="hidden" name="deleteReviewId" value="<%= singleReview.id %>">
+                            <button type="submit"><i class='bx bxs-trash' ></i></button>
+                        </form>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    
+    </div>
+    
+</body>
+
+<%- include('partials/footer.ejs') %>

@@ -1,0 +1,41 @@
+<%- include('partials/navbar.ejs') %>
+
+<body>
+    <div class="genre">
+        <div class="header">
+            <h1>Genre</h1>
+        </div>
+
+        <div class="card-container">
+            <% genres.forEach((genre) => { %>
+                <input type="radio" name="slide" id="<%= genre.id %>">
+                <label for="<%= genre.id %>" class="genre-card" style="background-image: url('https://image.tmdb.org/t/p/w500/<%= genreImages[genres.indexOf(genre)] %>');" onclick="handleCardClick(this, '<%= genre.id %>', '<%= genre.name %>')">
+                    <div class="icon"><%= genre.name %></div>
+                    <div class="row">
+                        <h2 class="genre-name"><%= genre.name %></h2>
+                    </div>
+                </label>
+            <% }); %>
+        </div>
+
+        <!--  Onclick  -->
+        <script>
+            function handleCardClick(card, genreId, genreName) {
+                if (!card.classList.contains('expanded')) {
+                    // If the card is not expanded, expand it
+                    card.classList.add('expanded');
+                } else {
+                    // If the card is already expanded, redirect to the genre page
+                    redirectToGenre(genreId, genreName);
+                }
+            }
+        
+            function redirectToGenre(genreId, genreName) {
+                window.location.href = "/genre/" + encodeURIComponent(genreId) + "/" + encodeURIComponent(genreName);
+            }
+        </script>
+        
+    </div>
+</body>
+
+<%- include('partials/footer.ejs') %>

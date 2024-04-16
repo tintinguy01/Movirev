@@ -1,0 +1,25 @@
+<%- include('partials/navbar.ejs') %>
+
+<div class="header">
+    <h1>Movies in <%= title %></h1>
+</div>
+
+<div class="movie-container">
+    <div class="movies">
+        <% movies.forEach(movie => { %>
+            <div class="movie-card" onclick="redirectToReview('<%= movie.id %>', '<%= movie.title %>')" style="background-image: url('https://image.tmdb.org/t/p/w500/<%= movie.poster_path %>');">
+                <h2><%= movie.title %></h2>
+                <img src="https://image.tmdb.org/t/p/w500/<%= movie.poster_path %>" alt="<%= movie.title %>">
+            </div>
+        <% }); %>
+    </div>
+</div>
+
+<script>
+    function redirectToReview(movieId, movieTitle) {
+        const encodedMovieTitle = encodeURIComponent(movieTitle.replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, "-"));
+        window.location.href = "/review/" + encodeURIComponent(movieId) + "/" + encodedMovieTitle;
+    }
+</script>
+
+<%- include('partials/footer.ejs') %>

@@ -1,0 +1,21 @@
+<div class="dark-mode">
+    <label>
+        <input type="checkbox" id="toggleDark" onchange="toggleDarkMode()">
+        <i class='bx bxs-sun'></i>
+        <i class='bx bxs-moon'></i>
+        <span class="toggle"></span>
+        <span class="animateBg"></span>
+    </label>
+</div>
+
+<script>
+    function toggleDarkMode() {
+    const body = document.body;
+
+    if (body.classList.contains("light-theme")) {
+        body.classList.remove("light-theme");
+    } else {
+        body.classList.add("light-theme");
+    }
+}
+</script>
