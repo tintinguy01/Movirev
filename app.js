@@ -37,10 +37,11 @@ async function fetchGenre() {
             name: genre.name
         }));
     } catch (err) {
-        console.error("Error fetching genres:", err.response?.data || err.message);
+        console.error("Error fetching genres:", err.response ? err.response.data : err.message);
         return [];
     }
 }
+
 
 // Function to fetch a random movie poster for a given genre
 async function fetchGenreImage(genreId) {
