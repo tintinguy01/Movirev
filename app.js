@@ -23,9 +23,9 @@ app.set('view engine', 'ejs');
 
 // Setup PostgreSQL connection
 const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
+    connectionString: process.env.POSTGRES_URL_URL,
     ssl: {
-        rejectUnauthorized: false, // Adjust based on your database settings
+        rejectUnauthorized: false,
     },
 });
 
