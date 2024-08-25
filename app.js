@@ -190,8 +190,11 @@ app.post('/review/:movieId/:movieTitle/update', async (req, res) => {
 
     console.log(`Updating review for movie: ${movieId}, review ID: ${reviewId}`);
     try {
-        await pool.query('UPDATE review SET score = $1, content = $2 WHERE id = $3 AND movie_id = $4;', [score, content, reviewId, movieId]);
-        res.redirect(`/review/${movieId}/${movieTitle}`);
+        await pool.query(
+            'UPDATE review SET score = $1, content = $2 WHERE id = $3 AND movie_id = $4;',
+            [score, content, reviewId, movieId]
+        );
+        res.redirect(`/review/${movieId}/${encodeURIComponent(movieTitle)}`);
     } catch (err) {
         console.error('Error updating review:', err.message);
         res.status(500).send('Error updating review');
