@@ -10,17 +10,17 @@
         <div class="new-form">
             <% if (locals.review) { %>
          
-                <form id="editForm" method="post" action="/review/<%= movie.id %>/<%= movie.original_title %>/update" class="new">
-                    <input type="hidden" name="movieId" value="<%= movieId %>">
+                <form id="editForm" method="post" action="/review/<%= movie.id %>/<%= encodeURIComponent(movie.original_title) %>/update" class="new">
+                    <input type="hidden" name="editReviewId" value="<%= review.id %>">
+                    <input type="hidden" name="movieId" value="<%= movie.id %>">
                     <div class="input-container">
-                        <input type="text" name="name" value="<%=review.name %>"><span>Title</span>
+                        <input type="text" name="name" value="<%= review.name %>" required><span>Title</span>
                     </div>
                     <div class="input-container">
-                        <input type="hidden" name="editReviewId" value="<%= review.id %>">
-                        <input type="text" name="score" value="<%=review.score %>"><span>Score</span>
+                        <input type="text" name="score" value="<%= review.score %>" required><span>Score</span>
                     </div>
                     <div class="input-container">
-                        <textarea name="content" rows="10"><%=review.content %></textarea><span>Content</span>
+                        <textarea name="content" rows="10" required><%= review.content %></textarea><span>Content</span>
                     </div>
                     <div class="new-button">
                         <button type="submit">
@@ -31,8 +31,8 @@
     
             <% } else { %>
              
-                <form id="newForm" method="post" action="/review/<%= movie.id %>/<%= movie.original_title %>/add" class="new">
-                    <input type="hidden" name="movieId" value="<%= movieId %>">
+                <form id="newForm" method="post" action="/review/<%= movie.id %>/<%= encodeURIComponent(movie.original_title) %>/add" class="new">
+                    <input type="hidden" name="movieId" value="<%= movie.id %>">
                     <div class="input-container">
                         <input type="text" name="name" required><span>Title</span>
                     </div>

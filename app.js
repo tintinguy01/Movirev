@@ -185,14 +185,14 @@ app.get('/review/:movieId/:movieTitle/edit/:reviewId', async (req, res) => {
 
 // Edit review
 app.post('/review/:movieId/:movieTitle/update', async (req, res) => {
-    const { score, content, editReviewId: reviewId } = req.body;
+    const { score, content, name, editReviewId: reviewId } = req.body;
     const { movieId, movieTitle } = req.params;
 
     console.log(`Updating review for movie: ${movieId}, review ID: ${reviewId}`);
     try {
         await pool.query(
-            'UPDATE review SET score = $1, content = $2 WHERE id = $3 AND movie_id = $4;',
-            [score, content, reviewId, movieId]
+            'UPDATE review SET score = $1, content = $2, name = $3 WHERE id = $4 AND movie_id = $5;',
+            [score, content, name, reviewId, movieId]
         );
         res.redirect(`/review/${movieId}/${encodeURIComponent(movieTitle)}`);
     } catch (err) {
