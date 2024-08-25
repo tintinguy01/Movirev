@@ -8,7 +8,7 @@ const { Pool } = pg;
 const app = express();
 const port = process.env.PORT || 3000;
 const API_URL = "https://api.themoviedb.org/3/";
-const API_KEY = "b8f254b4109691ac760b8537a6b443fe";
+const API_KEY = process.env.TMDB_API_KEY || "your_default_api_key"; // Moved API key to environment variable
 const imageBaseURL = 'https://image.tmdb.org/t/p/';
 
 const pool = new Pool({
@@ -37,7 +37,7 @@ async function fetchGenre() {
             name: genre.name
         }));
     } catch (err) {
-        console.error("Error fetching genres:", err);
+        console.error("Error fetching genres:", err.response?.data || err.message);
         return [];
     }
 }
@@ -49,7 +49,7 @@ async function fetchGenreImage(genreId) {
         const randomMovie = genreInfo.data.results[Math.floor(Math.random() * genreInfo.data.results.length)];
         return randomMovie.poster_path;
     } catch (err) {
-        console.error("Error fetching genre image:", err);
+        console.error("Error fetching genre image:", err.response?.data || err.message);
         return null;
     }
 }
@@ -82,7 +82,7 @@ app.get("/search", async (req, res) => {
             res.redirect("/");
         }
     } catch (error) {
-        console.error("Error searching for movie:", error);
+        console.error("Error searching for movie:", error.response?.data || error.message);
         res.status(500).send("Error searching for movie");
     }
 });
@@ -96,7 +96,7 @@ app.get("/genre/:genreId/:genreName", async (req, res) => {
 
         res.render("list.ejs", { title: name, movies });
     } catch (error) {
-        console.error("Error fetching movies by genre:", error);
+        console.error("Error fetching movies by genre:", error.response?.data || error.message);
         res.status(500).send("Error fetching movies by genre");
     }
 });
@@ -110,7 +110,7 @@ app.get("/review/:movieId/:movieTitle", async (req, res) => {
         const reviewsResult = await pool.query("SELECT * FROM review WHERE movie_id = $1 ORDER BY id ASC;", [movieId]);
         res.render("review.ejs", { movie: movieResult.data, review: reviewsResult.rows });
     } catch (error) {
-        console.error("Error fetching movie and reviews:", error);
+        console.error("Error fetching movie and reviews:", error.response?.data || error.message);
         res.status(500).send("Error fetching movie and reviews");
     }
 });
@@ -124,7 +124,7 @@ app.get("/review/:movieId/:movieTitle/new", async (req, res) => {
         const movieResult = await axios.get(`${API_URL}movie/${movieId}?language=en-US&api_key=${API_KEY}`);
         res.render("new.ejs", { movie: movieResult.data, movieId, movieTitle: sanitizedTitle, heading: "New Review", submit: "Create Review" });
     } catch (error) {
-        console.error("Error fetching movie details for review creation:", error);
+        console.error("Error fetching movie details for review creation:", error.response?.data || error.message);
         res.status(500).send("Error fetching movie details for review creation");
     }
 });
@@ -138,7 +138,7 @@ app.post("/review/:movieId/:movieTitle/add", async (req, res) => {
         await pool.query("INSERT INTO review (name, score, content, movie_id) VALUES ($1, $2, $3, $4);", [name, score, content, movieId]);
         res.redirect(`/review/${movieId}/${movieTitle}`);
     } catch (err) {
-        console.error("Error adding review:", err);
+        console.error("Error adding review:", err.message);
         res.status(500).send("Error adding review");
     }
 });
@@ -154,7 +154,7 @@ app.post("/review/:movieId/:movieTitle/edit", async (req, res) => {
         const reviewResult = await pool.query("SELECT * FROM review WHERE id = $1 AND movie_id = $2;", [reviewId, movieId]);
         res.render("new.ejs", { movie: movieResult.data, review: reviewResult.rows[0], movieId, movieTitle: sanitizedTitle, heading: "Edit Review", submit: "Update Review" });
     } catch (err) {
-        console.error("Error fetching movie and review details for editing:", err);
+        console.error("Error fetching movie and review details for editing:", err.message);
         res.status(500).send("Error fetching movie and review details for editing");
     }
 });
@@ -169,7 +169,7 @@ app.post("/review/:movieId/:movieTitle/update", async (req, res) => {
         await pool.query("UPDATE review SET score = $1, content = $2 WHERE id = $3 AND movie_id = $4;", [score, content, reviewId, movieId]);
         res.redirect(`/review/${movieId}/${movieTitle}`);
     } catch (err) {
-        console.error("Error updating review:", err);
+        console.error("Error updating review:", err.message);
         res.status(500).send("Error updating review");
     }
 });
@@ -183,7 +183,7 @@ app.post("/review/:movieId/:movieTitle/delete", async (req, res) => {
         await pool.query("DELETE FROM review WHERE id = $1 and movie_id = $2;", [reviewId, movieId]);
         res.redirect(`/review/${movieId}/${movieTitle}`);
     } catch (err) {
-        console.error("Error deleting review:", err);
+        console.error("Error deleting review:", err.message);
         res.status(500).send("Error deleting review");
     }
 });
