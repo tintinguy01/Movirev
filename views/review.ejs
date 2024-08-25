@@ -12,7 +12,7 @@
         <div class="cover-image">
             <img class="review-bg" src="https://image.tmdb.org/t/p/w500/<%= movie.poster_path %>">
             <!-- Add button -->
-            <a href="/review/<%= movie.id %>/<%= movie.original_title %>/new" class="add-button"><i class='bx bx-plus'></i> Add review</a>
+            <a href="/review/<%= movie.id %>/<%= encodeURIComponent(movie.original_title) %>/new" class="add-button"><i class='bx bx-plus'></i> Add review</a>
         </div>
     </div>
 
@@ -20,7 +20,7 @@
     <div class="box">
     
         <div class="review-container">
-            <% for( let singleReview of review ) { %>
+            <% for(let singleReview of review) { %>
                 <div class="review-card">
                     <div class="name-score">
                         <h2 id="<%= singleReview.id %>"><%= singleReview.name %></h2>
@@ -31,14 +31,14 @@
                     <h4 class="review-content" id="<%= singleReview.id %>"><%= singleReview.content %></h4>
         
                     <div class="review-button">
-                        <form action="/review/<%= movie.id %>/<%= movie.original_title %>/edit" method="post">
-                            <input type="hidden" name="editReviewId" value="<%= singleReview.id %>">
-                            <button type="submit"><i class='bx bxs-pencil' ></i></button>
+                        <!-- Edit Review Form -->
+                        <form action="/review/<%= movie.id %>/<%= encodeURIComponent(movie.original_title) %>/edit/<%= singleReview.id %>" method="post">
+                            <button type="submit"><i class='bx bxs-pencil'></i></button>
                         </form>
         
-                        <form action="/review/<%= movie.id %>/<%= movie.original_title %>/delete" method="post">
-                            <input type="hidden" name="deleteReviewId" value="<%= singleReview.id %>">
-                            <button type="submit"><i class='bx bxs-trash' ></i></button>
+                        <!-- Delete Review Form -->
+                        <form action="/review/<%= movie.id %>/<%= encodeURIComponent(movie.original_title) %>/delete/<%= singleReview.id %>" method="post">
+                            <button type="submit"><i class='bx bxs-trash'></i></button>
                         </form>
                     </div>
                 </div>

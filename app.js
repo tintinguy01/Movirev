@@ -183,7 +183,6 @@ app.get('/review/:movieId/:movieTitle/edit/:reviewId', async (req, res) => {
     }
 });
 
-
 // Edit review
 app.post('/review/:movieId/:movieTitle/update', async (req, res) => {
     const { score, content, editReviewId: reviewId } = req.body;
