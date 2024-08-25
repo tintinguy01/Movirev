@@ -40,11 +40,7 @@ async function fetchGenre() {
         }));
     } catch (err) {
         console.error("Error fetching genres:", err.response ? err.response.data : err.message);
-        if (err.response) {
-            console.error("Status Code:", err.response.status);
-            console.error("Headers:", err.response.headers);
-        }
-        return [];
+        throw new Error(`Error fetching genres: ${err.response ? err.response.data : err.message}`);
     }
 }
 
