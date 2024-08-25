@@ -12,7 +12,7 @@ const API_KEY = process.env.TMDB_API_KEY || "b8f254b4109691ac760b8537a6b443fe";
 const imageBaseURL = 'https://image.tmdb.org/t/p/';
 
 const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
+    connectionString: process.env.POSTGRES_URL_URL,
     ssl: {
         rejectUnauthorized: false,
     }
