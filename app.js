@@ -31,6 +31,7 @@ app.use(express.static("public"));
 // Function to fetch genres from API
 async function fetchGenre() {
     try {
+        console.log("Fetching genres...");
         const result = await axios.get(`${API_URL}genre/movie/list?api_key=${API_KEY}`);
         console.log("Genres fetched successfully.");
         return result.data.genres.map(genre => ({
@@ -39,9 +40,14 @@ async function fetchGenre() {
         }));
     } catch (err) {
         console.error("Error fetching genres:", err.response ? err.response.data : err.message);
+        if (err.response) {
+            console.error("Status Code:", err.response.status);
+            console.error("Headers:", err.response.headers);
+        }
         return [];
     }
 }
+
 
 // Function to fetch a random movie poster for a given genre
 async function fetchGenreImage(genreId) {
