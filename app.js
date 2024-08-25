@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import axios from 'axios';
 import pg from 'pg';
+import path from "path";
 
 const { Pool } = pg;
 
@@ -10,6 +11,9 @@ const port = process.env.PORT || 3000;
 const API_URL = process.env.TMDB_API_URL || "https://api.themoviedb.org/3/";
 const API_KEY = process.env.TMDB_API_KEY || "b8f254b4109691ac760b8537a6b443fe";
 const imageBaseURL = 'https://image.tmdb.org/t/p/';
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 const pool = new Pool({
     connectionString: process.env.POSTGRES_URL_URL,
