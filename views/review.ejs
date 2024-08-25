@@ -31,8 +31,8 @@
                     <h4 class="review-content" id="<%= singleReview.id %>"><%= singleReview.content %></h4>
         
                     <div class="review-button">
-                        <!-- Edit Review Form -->
-                        <form action="/review/<%= movie.id %>/<%= encodeURIComponent(movie.original_title) %>/edit/<%= singleReview.id %>" method="post">
+                        <!-- Change this form to use GET for editing -->
+                        <form action="/review/<%= movie.id %>/<%= encodeURIComponent(movie.original_title) %>/edit/<%= singleReview.id %>" method="get">
                             <button type="submit"><i class='bx bxs-pencil'></i></button>
                         </form>
         
