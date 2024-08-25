@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import axios from 'axios';
 import pg from 'pg';
+import path from 'path';
 
 const { Pool } = pg;
 
@@ -26,7 +27,7 @@ pool.on('error', (err) => {
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public"))); // Ensure static files are served from the correct directory
 
 // Function to fetch genres from API
 async function fetchGenre() {
@@ -41,7 +42,6 @@ async function fetchGenre() {
         return [];
     }
 }
-
 
 // Function to fetch a random movie poster for a given genre
 async function fetchGenreImage(genreId) {
@@ -59,14 +59,11 @@ async function fetchGenreImage(genreId) {
 app.get("/", async (req, res) => {
     try {
         const genres = await fetchGenre();
-
-        // Fetch genre images for all genres asynchronously
         const genreImages = await Promise.all(genres.map(genre => fetchGenreImage(genre.id)));
-
         res.render("main.ejs", { genres, genreImages });
     } catch (error) {
         console.error("Error rendering main page:", error);
-        res.status(500).send("Error fetching genres");
+        res.status(500).send("Error rendering main page");
     }
 });
 
@@ -83,7 +80,7 @@ app.get("/search", async (req, res) => {
             res.redirect("/");
         }
     } catch (error) {
-        console.error("Error searching for movie:", error.response?.data || error.message);
+        console.error("Error searching for movie:", error.response?.data || err.message);
         res.status(500).send("Error searching for movie");
     }
 });
@@ -94,10 +91,9 @@ app.get("/genre/:genreId/:genreName", async (req, res) => {
         const { genreId: id, genreName: name } = req.params;
         const result = await axios.get(`${API_URL}discover/movie?include_adult=true&include_video=true&api_key=${API_KEY}&page=1&sort_by=popularity.desc&with_genres=${id}&language=en-US`);
         const movies = result.data.results;
-
         res.render("list.ejs", { title: name, movies });
     } catch (error) {
-        console.error("Error fetching movies by genre:", error.response?.data || error.message);
+        console.error("Error fetching movies by genre:", error.response?.data || err.message);
         res.status(500).send("Error fetching movies by genre");
     }
 });
@@ -111,7 +107,7 @@ app.get("/review/:movieId/:movieTitle", async (req, res) => {
         const reviewsResult = await pool.query("SELECT * FROM review WHERE movie_id = $1 ORDER BY id ASC;", [movieId]);
         res.render("review.ejs", { movie: movieResult.data, review: reviewsResult.rows });
     } catch (error) {
-        console.error("Error fetching movie and reviews:", error.response?.data || error.message);
+        console.error("Error fetching movie and reviews:", error.response?.data || err.message);
         res.status(500).send("Error fetching movie and reviews");
     }
 });
@@ -125,7 +121,7 @@ app.get("/review/:movieId/:movieTitle/new", async (req, res) => {
         const movieResult = await axios.get(`${API_URL}movie/${movieId}?language=en-US&api_key=${API_KEY}`);
         res.render("new.ejs", { movie: movieResult.data, movieId, movieTitle: sanitizedTitle, heading: "New Review", submit: "Create Review" });
     } catch (error) {
-        console.error("Error fetching movie details for review creation:", error.response?.data || error.message);
+        console.error("Error fetching movie details for review creation:", error.response?.data || err.message);
         res.status(500).send("Error fetching movie details for review creation");
     }
 });
