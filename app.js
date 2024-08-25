@@ -40,7 +40,11 @@ async function fetchGenre() {
         }));
     } catch (err) {
         console.error("Error fetching genres:", err.response ? err.response.data : err.message);
-        throw new Error(`Error fetching genres: ${err.response ? err.response.data : err.message}`);
+        if (err.response) {
+            console.error("Status Code:", err.response.status);
+            console.error("Headers:", err.response.headers);
+        }
+        return [];
     }
 }
 
@@ -69,7 +73,6 @@ app.get("/", async (req, res) => {
         res.status(500).send(`Error fetching genres: ${error.message}`);
     }
 });
-
 
 // Handling search request
 app.get("/search", async (req, res) => {
