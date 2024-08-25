@@ -61,19 +61,15 @@ async function fetchGenreImage(genreId) {
 // Rendering main page
 app.get("/", async (req, res) => {
     try {
-        console.log("Fetching genres for main page...");
         const genres = await fetchGenre();
-
-        // Fetch genre images for all genres asynchronously
         const genreImages = await Promise.all(genres.map(genre => fetchGenreImage(genre.id)));
-        console.log("Rendering main page...");
-
         res.render("main.ejs", { genres, genreImages });
     } catch (error) {
         console.error("Error rendering main page:", error);
-        res.status(500).send("Error fetching genres");
+        res.status(500).send(`Error fetching genres: ${error.message}`);
     }
 });
+
 
 // Handling search request
 app.get("/search", async (req, res) => {
