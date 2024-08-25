@@ -3,25 +3,22 @@ import bodyParser from "body-parser";
 import axios from 'axios';
 import pg from 'pg';
 
+const { Pool } = pg;
+
 const app = express();
 const port = 3000;
 const API_URL = "https://api.themoviedb.org/3/";
 const API_KEY = "b8f254b4109691ac760b8537a6b443fe";
 const imageBaseURL = 'https://image.tmdb.org/t/p/';
 
-const db = new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    database: "Movirev",
-    password: "Heroandmarch061201*",
-    port: 5432,
+const pool = new Pool({
+    connectionString: process.env.POSTGRES_URL,
 });
 
-db.connect();
-
 // Middleware
-app.use(bodyParser.urlencoded({ extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+
 
 // Function to fetch genre from API
 async function fetchGenre() {
