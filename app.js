@@ -216,6 +216,6 @@ app.post("/review/:movieId/:movieTitle/delete", async (req, res) => {
 });
 
 
-app.listen(process.env.port, () => {
+app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 })
